@@ -7,9 +7,8 @@ const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
-connectDB();
-
 const app = express();
+connectDB();
 
 app.use(cors());
 app.use(express.json());

@@ -19,14 +19,16 @@ const getProductById = async (req, res) => {
 
 // Create product
 const createProduct = async (req, res) => {
-  const { name, price, stock, description, image } = req.body;
+  const { name, price, stock, description, category, image } = req.body;
 
   const product = await Product.create({
     name,
     price,
     stock,
     description,
-    image
+    category,
+    image,
+    user: req.user._id
   });
 
   res.status(201).json(product);
@@ -37,10 +39,13 @@ const updateProduct = async (req, res) => {
   const product = await Product.findById(req.params.id);
 
   if (product) {
-    product.name = req.body.name || product.name;
-    product.price = req.body.price || product.price;
-    product.description = req.body.description || product.description;
-    product.image = req.body.image || product.image;
+    product.name = req.body.name ?? product.name;
+    product.price = req.body.price ?? product.price;
+    product.stock = req.body.stock ?? product.stock;
+    product.description = req.body.description ?? product.description;
+    product.category = req.body.category ?? product.category;
+    product.image = req.body.image ?? product.image;
+    product.user =  req.user._id;
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);

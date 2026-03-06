@@ -26,9 +26,7 @@ function Register() {
 
     try {
       const { data } = await API.post("/auth/register", form);
-
       localStorage.setItem("user", JSON.stringify(data));
-
       navigate("/");
     } catch (error) {
       alert(error.response?.data?.message || "Register failed");
@@ -36,38 +34,66 @@ function Register() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Register</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
 
-      <input
-        type="text"
-        placeholder="Name"
-        value={form.name}
-        onChange={(e) =>
-          setForm({ ...form, name: e.target.value })
-        }
-      />
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-8 rounded-xl shadow-md w-full max-w-md space-y-4"
+      >
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={(e) =>
-          setForm({ ...form, email: e.target.value })
-        }
-      />
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          Create Account
+        </h2>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={form.password}
-        onChange={(e) =>
-          setForm({ ...form, password: e.target.value })
-        }
-      />
+        <input
+          type="text"
+          placeholder="Name"
+          value={form.name}
+          onChange={(e) =>
+            setForm({ ...form, name: e.target.value })
+          }
+          className="w-full border p-3 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
+        />
 
-      <button type="submit">Register</button>
-    </form>
+        <input
+          type="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={(e) =>
+            setForm({ ...form, email: e.target.value })
+          }
+          className="w-full border p-3 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={(e) =>
+            setForm({ ...form, password: e.target.value })
+          }
+          className="w-full border p-3 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
+        />
+
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition"
+        >
+          Register
+        </button>
+
+        <p className="text-center text-sm text-gray-500">
+          Already have an account?{" "}
+          <span
+            onClick={() => navigate("/login")}
+            className="text-blue-600 cursor-pointer hover:underline"
+          >
+            Login
+          </span>
+        </p>
+
+      </form>
+    </div>
   );
 }
 

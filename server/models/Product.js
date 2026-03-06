@@ -14,10 +14,25 @@ const productSchema = new mongoose.Schema(
         stock: { 
             type: Number, 
             required: true, 
+            default: 0,
             trim: true },
-        description: String,
-        category: String,
-        image: String
+        description: {
+            type: String,
+            default: ""
+        },
+        category: {
+            type: String,
+            default: ""
+        },
+        image: {
+            type: String,
+            default: ""
+        },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
+        }
     }, 
     { timestamps: true }
 ); //file info

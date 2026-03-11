@@ -1,11 +1,26 @@
-function ProductCard({ product, onDelete, onEdit }) {
+import API from "../services/api";
+import toast from "react-hot-toast";
+
+function ProductCard({ product, onDelete, onEdit, onView }) {
   const user = JSON.parse(localStorage.getItem("user"));
 
+  const addToCart = async () => {
+    await API.post("/cart", {
+      productId: product._id,
+    });
+
+    toast.success("Added to cart");
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
+    <div
+      onClick={() => onView(product)}
+      // className="flex gap-2"
+      className="bg-white rounded-xl shadow hover:shadow-lg hover:scale-[1.02] transition cursor-pointer overflow-hidden"
+    >
 
       <img
-        src={(product.image=="") ? "https://placehold.co/600x400/png" : product.image}
+        src={`http://localhost:3001${product.image}`}
         alt={product.name}
         className="w-full h-48 object-cover"
       />
@@ -29,15 +44,21 @@ function ProductCard({ product, onDelete, onEdit }) {
           {user?.role === "admin" ? (
             <>
               <button
-                onClick={() => onEdit(product)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit(product)
+                }}
                 className="flex-1 bg-blue-500 text-white py-1 rounded hover:bg-blue-600"
               >
                 Edit
               </button>
 
               <button
-                onClick={() => onDelete(product._id)}
-                className="flex-1 bg-red-500 text-white py-1 rounded hover:bg-red-600"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(product);
+                }}
+                className="flex-1 bg-red-500 text-white py-1 rounded"
               >
                 Delete
               </button>
@@ -45,13 +66,17 @@ function ProductCard({ product, onDelete, onEdit }) {
           ) : (
             <>
               <button
-                className="flex-1 bg-green-500 text-white py-1 rounded hover:bg-green-600"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addToCart();
+                }}
+                className="flex-1 bg-yellow-500 text-white py-1 rounded"
               >
                 Add to Cart
               </button>
 
               <button
-                className="flex-1 bg-yellow-500 text-white py-1 rounded hover:bg-yellow-600"
+                className="flex-1 bg-green-500 text-white py-1 rounded"
               >
                 Buy
               </button>

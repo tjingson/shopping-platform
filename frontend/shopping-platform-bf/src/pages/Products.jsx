@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import API from "../services/api";
 import ProductCard from "../components/ProductCard";
 import { useNavigate } from "react-router-dom";
-
+import toast from "react-hot-toast";
+import Carousel from "../components/Carousel";
 
 function Products() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -10,10 +11,12 @@ function Products() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
-
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [deleteProduct, setDeleteProduct] = useState(null);
   const filteredProducts = products.filter((product) =>
-  product.name.toLowerCase().includes(search.toLowerCase())
-);
+    product.name.toLowerCase().includes(search.toLowerCase())
+  );
+  const [showWelcome, setShowWelcome] = useState(false);
 
   const fetchProducts = async () => {
     try {
@@ -31,12 +34,42 @@ function Products() {
     fetchProducts();
   }, []);
 
-  const handleDelete = async (id) => {
+  useEffect(() => {
+    const firstLogin = localStorage.getItem("firstLogin");
+
+    if (!firstLogin) {
+      setShowWelcome(true);
+      localStorage.setItem("firstLogin", "true");
+    }
+  }, []);
+
+  const handleView = (product) => {
+    setSelectedProduct(product);
+  };
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") {
+       setSelectedProduct(null);
+      }
+  };
+
+  window.addEventListener("keydown", handleEsc);
+
+  return () => window.removeEventListener("keydown", handleEsc);
+}, []);
+
+  const confirmDelete = async () => {
     try {
-      await API.delete(`/products/${id}`);
+      await API.delete(`/products/${deleteProduct._id}`);
+
+      toast.success("Product deleted");
+
+      setDeleteProduct(null);
       fetchProducts();
+
     } catch (error) {
-      console.error(error);
+      toast.error("Failed to delete product");
     }
   };
 
@@ -55,7 +88,7 @@ function Products() {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-
+      <Carousel />
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
 
         <div>
@@ -102,10 +135,134 @@ function Products() {
             <ProductCard
               key={product._id}
               product={product}
-              onDelete={handleDelete}
+              onDelete={(product) => setDeleteProduct(product)}
               onEdit={handleEdit}
+              onView={handleView}
             />
           ))}
+        </div>
+      )}
+
+    {/* PRODUCT MODAL */}
+      {selectedProduct && (
+        <div
+          className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50"
+          onClick={() => setSelectedProduct(null)}
+        >
+
+          {/* MODAL CARD */}
+          <div
+            className="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full relative animate-fadeIn"
+            onClick={(e) => e.stopPropagation()}
+          >
+
+            {/* CLOSE BUTTON */}
+            <button
+              onClick={() => setSelectedProduct(null)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl font-bold"
+            >
+              ×
+            </button>
+
+            <img
+              src={`http://localhost:3001${selectedProduct.image}`}
+              alt={selectedProduct.name}
+              className="w-full h-64 object-cover rounded-lg"
+            />
+
+            <h2 className="text-2xl font-bold mt-4">
+              {selectedProduct.name}
+            </h2>
+
+            <p className="text-green-600 font-semibold mt-2">
+              Rp {Number(selectedProduct.price).toLocaleString("id-ID")}
+            </p>
+
+            <p className="text-gray-600 mt-2">
+              Stock: {selectedProduct.stock}
+            </p>
+
+            <p className="text-gray-500 mt-4">
+              {selectedProduct.description || "No description"}
+            </p>
+
+          </div>
+        </div>
+      )}
+
+    {/* Conf delete modal */}
+      {deleteProduct && (
+        <div
+          className="fixed inset-0 flex items-center justify-center z-50"
+          onClick={() => setDeleteProduct(null)}
+        >
+
+          <div
+            className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+
+            <h2 className="text-xl font-bold mb-2">
+              Delete Product
+            </h2>
+
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete{" "}
+              <span className="font-semibold">
+                {deleteProduct.name}
+              </span>?
+            </p>
+
+            <div className="flex justify-end gap-3">
+
+              <button
+                onClick={() => setDeleteProduct(null)}
+                className="px-4 py-2 rounded border"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Delete
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      )}
+
+      {showWelcome && (
+        <div
+          className="fixed inset-0 flex items-center justify-center z-50"
+          onClick={() => setShowWelcome(false)}
+        >
+
+          <div
+            className="bg-white p-6 rounded-xl shadow-xl w-96"
+            onClick={(e) => e.stopPropagation()}
+          >
+
+            <h2 className="text-xl font-bold mb-2">
+              Welcome to BatterFools!
+            </h2>
+
+            <p className="text-gray-600 mb-4">
+              Unfortunately, we sell breads
+            </p>
+
+            <button
+              onClick={() => setShowWelcome(false)}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Start Shopping
+            </button>
+
+          </div>
         </div>
       )}
     </div>

@@ -7,6 +7,7 @@ const {
   updateProduct,
   deleteProduct
 } = require("../controllers/productController");
+const upload = require("../middleware/uploadMiddleware");
 
 const { protect } = require("../middleware/authMiddleware");
 
@@ -18,5 +19,11 @@ router.route("/:id")
   .get(getProductById)
   .put(protect, updateProduct)
   .delete(protect, deleteProduct);
+
+  router.post("/upload", protect, upload.single("image"), (req, res) => {
+  res.json({
+    image: `/uploads/products/${req.file.filename}`,
+  });
+});
 
 module.exports = router;

@@ -2,6 +2,8 @@ import { useState } from "react";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
+
 
 function Login() {
 
@@ -26,9 +28,11 @@ function Login() {
 
       //locally save login state
       localStorage.setItem("user", JSON.stringify(data));
+      toast.success("Login successful!");
       navigate("/");
 
     } catch (error) {
+      toast.error("Invalid email or password");
       alert(error.response?.data?.message || "Login failed");
     }
   };

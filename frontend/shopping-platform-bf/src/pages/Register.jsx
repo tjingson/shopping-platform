@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 function Register() {
 
@@ -27,8 +28,10 @@ function Register() {
     try {
       const { data } = await API.post("/auth/register", form);
       localStorage.setItem("user", JSON.stringify(data));
+      toast.success("Register successful!");
       navigate("/");
     } catch (error) {
+      toast.error("Something went wrong");
       alert(error.response?.data?.message || "Register failed");
     }
   };

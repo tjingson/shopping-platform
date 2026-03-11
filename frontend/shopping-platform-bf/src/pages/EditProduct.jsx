@@ -1,22 +1,23 @@
 import { useEffect, useState } from "react";
-import api from "../services/api";
+import API from "../services/api";
 import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import ImageUploader from "../components/ImageUploader";
 
-const EditProduct = () => {
+function EditProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
-
-
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [description, setDesc] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState("");
+  const [preview, setPreview] = useState("");
 
   const fetchProduct = async () => {
     try {
-      const res = await api.get("/products");
+      const res = await API.get("/products");
       const product = res.data.find((p) => p._id === id);
 
       setName(product.name);
@@ -25,6 +26,7 @@ const EditProduct = () => {
       setDesc(product.description);
       setCategory(product.category);
       setImage(product.image);
+      setPreview(`http://localhost:3001${product.image}`);
     } catch (error) {
       console.error(error);
     }
@@ -34,11 +36,29 @@ const EditProduct = () => {
     fetchProduct();
   }, []);
 
+  const uploadImage = async (file) => {
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const { data } = await API.post(
+      "/products/upload",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    setImage(data.image);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      await api.put(`/products/${id}`, {
+      await API.put(`/products/${id}`, {
         name,
         price,
         stock,
@@ -46,6 +66,8 @@ const EditProduct = () => {
         category,
         image
       });
+
+      toast.success("Product updated!");
 
       navigate("/products");
     } catch (error) {
@@ -59,6 +81,12 @@ const EditProduct = () => {
       <h1 className="text-2xl font-bold mb-4">Edit Product</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+
+        <ImageUploader
+          preview={preview}
+          setPreview={setPreview}
+          uploadImage={uploadImage}
+        />
 
         <input
           type="text"
@@ -98,14 +126,6 @@ const EditProduct = () => {
           className="border p-2 rounded"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-        />
-
-        <input
-          type="text"
-          placeholder="image"
-          className="border p-2 rounded"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
         />
 
         <button className="bg-blue-500 text-white p-2 rounded">

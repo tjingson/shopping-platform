@@ -1,6 +1,8 @@
 import { useState } from "react";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import ImageUploader from "../components/ImageUploader";
 
 function CreateProduct() {
   const [name, setName] = useState("");
@@ -9,8 +11,26 @@ function CreateProduct() {
   const [description, setDesc] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState("");
+  const [preview, setPreview] = useState("");
 
   const navigate = useNavigate();
+
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const { data } = await API.post(
+      "/products/upload",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    setImage(data.image);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,6 +45,8 @@ function CreateProduct() {
         image,
       });
 
+      toast.success("Product created!");
+
       navigate("/products");
     } catch (error) {
       console.error(error);
@@ -37,6 +59,12 @@ function CreateProduct() {
       <h1 className="text-2xl font-bold mb-4">Create Product</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+
+        <ImageUploader
+          preview={preview}
+          setPreview={setPreview}
+          uploadImage={uploadImage}
+        />
 
         <input
           type="text"
@@ -76,14 +104,6 @@ function CreateProduct() {
           className="border p-2 rounded"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-        />
-
-        <input
-          type="text"
-          placeholder="image"
-          className="border p-2 rounded"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
         />
 
         <button 

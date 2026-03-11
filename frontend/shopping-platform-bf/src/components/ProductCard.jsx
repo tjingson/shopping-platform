@@ -1,8 +1,9 @@
 import API from "../services/api";
 import toast from "react-hot-toast";
+import { useAuth } from "../context/authContext";
 
 function ProductCard({ product, onDelete, onEdit, onView }) {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user, login, logout } = useAuth();
 
   const addToCart = async () => {
     await API.post("/cart", {

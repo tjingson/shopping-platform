@@ -1,8 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 
 function Navbar() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user, login, logout } = useAuth();
 
   const logoutHandler = () => {
     localStorage.removeItem("user");

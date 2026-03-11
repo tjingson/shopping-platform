@@ -4,9 +4,10 @@ import ProductCard from "../components/ProductCard";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Carousel from "../components/Carousel";
+import { useAuth } from "../context/authContext";
 
 function Products() {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user, login, logout } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -165,8 +166,8 @@ function Products() {
             </button>
 
             <img
-              src={`http://localhost:3001${selectedProduct.image}`}
-              alt={selectedProduct.name}
+              src={`http://localhost:3001${product.image}`}
+              alt={product.name}
               className="w-full h-64 object-cover rounded-lg"
             />
 

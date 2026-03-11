@@ -56,7 +56,7 @@ function CreateProduct() {
   return (
     <div className="max-w-md mx-auto p-6">
 
-      <h1 className="text-2xl font-bold mb-4">Create Product</h1>
+      <h1 className="text-2xl font-bold mb-4 self-center">Create Product</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
 

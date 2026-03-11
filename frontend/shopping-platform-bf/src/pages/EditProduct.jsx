@@ -3,6 +3,7 @@ import API from "../services/api";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import ImageUploader from "../components/ImageUploader";
+import { IMAGE_URL } from "../services/api";
 
 function EditProduct() {
   const { id } = useParams();
@@ -26,7 +27,7 @@ function EditProduct() {
       setDesc(product.description);
       setCategory(product.category);
       setImage(product.image);
-      setPreview(`http://localhost:3001${product.image}`);
+      setPreview(`${IMAGE_URL}${product.image}`);
     } catch (error) {
       console.error(error);
     }

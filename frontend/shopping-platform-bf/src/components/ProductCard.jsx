@@ -1,6 +1,7 @@
 import API from "../services/api";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/authContext";
+import { IMAGE_URL } from "../services/api";
 
 function ProductCard({ product, onDelete, onEdit, onView }) {
   const { user, login, logout } = useAuth();
@@ -21,7 +22,7 @@ function ProductCard({ product, onDelete, onEdit, onView }) {
     >
 
       <img
-        src={`http://localhost:3001${product.image}`}
+        src={`${IMAGE_URL}${product.image}`}
         alt={product.name}
         className="w-full h-48 object-cover"
       />

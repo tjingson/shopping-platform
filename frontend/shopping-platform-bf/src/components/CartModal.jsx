@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import API from "../services/api";
 
 function CartModal({ close }) {
-
   const [items, setItems] = useState([]);
+  const validItems = items.filter(item => item.product);
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -45,14 +45,12 @@ function CartModal({ close }) {
 
         </div>
 
-        {items.length === 0 ? (
+        {validItems.length === 0 ? (
           <p className="text-gray-500">
             Your cart is empty
           </p>
         ) : (
-
-          items.map((item) => (
-
+          validItems.map((item) => (
             <div
               key={item.product._id}
               className="flex justify-between border-b py-3"

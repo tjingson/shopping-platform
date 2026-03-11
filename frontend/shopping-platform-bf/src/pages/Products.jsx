@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Carousel from "../components/Carousel";
 import { useAuth } from "../context/authContext";
+import { IMAGE_URL } from "../services/api";
 
 function Products() {
   const { user, login, logout } = useAuth();
@@ -22,7 +23,6 @@ function Products() {
   const fetchProducts = async () => {
     try {
       const { data } = await API.get("/products");
-      console.log(user); 
       setProducts(data);
     } catch (error) {
       console.error(error);
@@ -166,8 +166,8 @@ function Products() {
             </button>
 
             <img
-              src={`http://localhost:3001${product.image}`}
-              alt={product.name}
+              src={`${IMAGE_URL}${selectedProduct.image}`}
+              alt={selectedProduct.name}
               className="w-full h-64 object-cover rounded-lg"
             />
 

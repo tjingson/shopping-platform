@@ -11,7 +11,13 @@ const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const app = express();
 connectDB();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://shopping-platform-rc25.vercel.app"
+  ],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -28,7 +34,3 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});

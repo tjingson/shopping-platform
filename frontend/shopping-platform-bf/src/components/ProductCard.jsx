@@ -21,7 +21,6 @@ function ProductCard({ product, onDelete, onEdit, onView }) {
   return (
     <div
       onClick={() => onView(product)}
-      // className="flex gap-2"
       className="bg-white rounded-xl shadow hover:shadow-lg hover:scale-[1.02] transition cursor-pointer overflow-hidden"
     >
 

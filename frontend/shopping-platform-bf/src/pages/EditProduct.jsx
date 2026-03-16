@@ -18,8 +18,8 @@ function EditProduct() {
 
   const fetchProduct = async () => {
     try {
-      const res = await api.get("/products");
-      const product = res.data.find((p) => p._id === id);
+      const res = await API.get(`/products/${id}`);
+      const product = res.data;
 
       setName(product.name);
       setPrice(product.price);

@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Products from "./pages/Products";
@@ -9,8 +8,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import CreateProduct from "./pages/CreateProduct";
 import EditProduct from "./pages/EditProduct";
 import CartButton from "./components/CartButton";
+import { useAuth } from "./context/authContext";
 
 function App() {
+  const { user } = useAuth();
   return (
     <Router>
       <Toaster
@@ -35,15 +36,7 @@ function App() {
             <Route path="/" element={<Navigate to="/products" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-
-            <Route
-              path="/products"
-              element={
-                <ProtectedRoute>
-                  <Products />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/products" element={<Products />} />
 
             <Route
               path="/create-product"
@@ -64,8 +57,7 @@ function App() {
             />
           </Routes>
         </div>
-
-        <CartButton />
+        {user && <CartButton />}
       </div>
     </Router>
   );

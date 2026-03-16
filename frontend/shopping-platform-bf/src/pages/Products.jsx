@@ -36,13 +36,14 @@ function Products() {
   }, []);
 
   useEffect(() => {
-    const firstLogin = localStorage.getItem("firstLogin");
+    if (!user) return;
+    const firstLogin = sessionStorage.getItem("firstLoginShown");
 
     if (!firstLogin) {
       setShowWelcome(true);
-      localStorage.setItem("firstLogin", "true");
+      sessionStorage.setItem("firstLoginShown", "true");
     }
-  }, []);
+  }, [user]);
 
   const handleView = (product) => {
     setSelectedProduct(product);
@@ -91,14 +92,12 @@ function Products() {
     <div className="max-w-6xl mx-auto p-6">
       <Carousel />
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-
         <div>
           <h1 className="text-3xl font-bold text-gray-800">Products</h1>
           <p className="text-gray-500 text-sm">
             Showing {filteredProducts.length} of {products.length} products
           </p>
         </div>
-
         <div className="flex gap-3">
 
           <input
@@ -119,7 +118,6 @@ function Products() {
           )}
         </div>
       </div>
-
       {products.length === 0 ? (
         <div className="text-center text-gray-500 mt-20">
           <p className="text-lg">No products yet</p>
@@ -150,13 +148,11 @@ function Products() {
           className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50"
           onClick={() => setSelectedProduct(null)}
         >
-
           {/* MODAL CARD */}
           <div
             className="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full relative animate-fadeIn"
             onClick={(e) => e.stopPropagation()}
           >
-
             {/* CLOSE BUTTON */}
             <button
               onClick={() => setSelectedProduct(null)}
@@ -164,17 +160,14 @@ function Products() {
             >
               ×
             </button>
-
             <img
               src={`${IMAGE_URL}${selectedProduct.image}`}
               alt={selectedProduct.name}
               className="w-full h-64 object-cover rounded-lg"
             />
-
             <h2 className="text-2xl font-bold mt-4">
               {selectedProduct.name}
             </h2>
-
             <p className="text-green-600 font-semibold mt-2">
               Rp {Number(selectedProduct.price).toLocaleString("id-ID")}
             </p>
@@ -182,11 +175,9 @@ function Products() {
             <p className="text-gray-600 mt-2">
               Stock: {selectedProduct.stock}
             </p>
-
             <p className="text-gray-500 mt-4">
               {selectedProduct.description || "No description"}
             </p>
-
           </div>
         </div>
       )}
@@ -236,33 +227,27 @@ function Products() {
 
         </div>
       )}
-
       {showWelcome && (
         <div
           className="fixed inset-0 flex items-center justify-center z-50"
           onClick={() => setShowWelcome(false)}
         >
-
           <div
             className="bg-white p-6 rounded-xl shadow-xl w-96"
             onClick={(e) => e.stopPropagation()}
           >
-
             <h2 className="text-xl font-bold mb-2">
               Welcome to BatterFools!
             </h2>
-
             <p className="text-gray-600 mb-4">
               Unfortunately, we sell breads
             </p>
-
             <button
               onClick={() => setShowWelcome(false)}
               className="bg-blue-500 text-white px-4 py-2 rounded"
             >
               Start Shopping
             </button>
-
           </div>
         </div>
       )}

@@ -3,11 +3,11 @@ import { useAuth } from "../context/authContext";
 
 function Navbar() {
   const navigate = useNavigate();
-  const { user, login, logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const logoutHandler = () => {
-    localStorage.removeItem("user");
-    navigate("/login");
+    logout();
+    navigate("/products");
   };
 
   return (

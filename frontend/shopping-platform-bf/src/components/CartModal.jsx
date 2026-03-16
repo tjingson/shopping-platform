@@ -10,18 +10,18 @@ function CartModal({ close }) {
     const fetchCart = async () => {
       try {
         const { data } = await API.get("/cart");
-        setItems((data.items || []).filter(item => item.product));
+        const cleanItems = (data.items || []).filter(item => item.product);
+        setItems(cleanItems);
       } catch (err) {
         console.error(err);
       }
     };
-
     fetchCart();
   }, []);
 
-  const subtotal = validItems.reduce(
-  (total, item) => total + item.product.price * item.quantity,
-  0
+  const subtotal = items.reduce(
+    (total, item) => total + item.product.price * item.quantity,
+    0
 );
 
   const removeItem = async (productId) => {

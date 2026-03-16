@@ -1,32 +1,47 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+
 const connectDB = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const app = express();
+
 connectDB();
+
+app.use(cookieParser());
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://shopping-platform-rc25.vercel.app",
-      /\.vercel\.app$/
-    ],
+    origin: (origin, callback) => {
+      if (
+        !origin ||
+        origin === "http://localhost:5173" ||
+        origin === "https://shopping-platform-rc25.vercel.app" ||
+        origin.endsWith(".vercel.app")
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
+
 app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res) => {

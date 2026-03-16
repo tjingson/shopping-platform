@@ -33,7 +33,14 @@ const getCart = async (req, res) => {
     if (!cart) {
       return res.json({ items: [] });
     }
+    // remove deleted products
+    const validItems = cart.items.filter(item => item.product);
 
+    // update DB if cleanup happened
+    if (validItems.length !== cart.items.length) {
+      cart.items = validItems;
+      await cart.save();
+    }
     res.json(cart);
   } catch (error) {
     res.status(500).json({ message: error.message });

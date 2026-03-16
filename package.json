@@ -10,7 +10,7 @@
     "dev": "concurrently \"npm run backend\" \"npm run frontend\""
   },
   "keywords": [],
-  "author": "",
+  "author": "", 
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {

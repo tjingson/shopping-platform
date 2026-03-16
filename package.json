@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node server/index.js",
     "backend": "nodemon server/index.js",
     "frontend": "cd frontend/shopping-platform-bf && npm run dev",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\""

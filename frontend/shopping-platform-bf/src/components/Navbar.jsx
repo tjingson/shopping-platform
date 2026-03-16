@@ -5,8 +5,8 @@ function Navbar() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-  const logoutHandler = () => {
-    logout();
+  const logoutHandler = async () => {
+    await logout();
     navigate("/products");
   };
 
@@ -16,7 +16,6 @@ function Navbar() {
         <Link to="/" className="text-2xl font-bold text-gray-800">
           BatterFools
         </Link>
-
         <div className="flex gap-6 items-center">
           {user ? (
             <>

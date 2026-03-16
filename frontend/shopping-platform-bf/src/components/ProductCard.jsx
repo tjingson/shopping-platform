@@ -1,29 +1,22 @@
-import API from "../services/api";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/authContext";
 import { IMAGE_URL } from "../services/api";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/cartContext";
 
 function ProductCard({ product, onDelete, onEdit, onView }) {
   const { user } = useAuth();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const { addToCart } = useCart();
 
-  const addToCart = async () => {
+  const handleAddToCart = () => {
     if (!user) {
-      toast.error("Please login first");
-      return;
+      toast.error ("Please Login");
+      return
     }
-
-    try {
-      await API.post("/cart", {
-        productId: product._id,
-      });
-
-      toast.success("Added to cart");
-    } catch (error) {
-      toast.error("Failed to add to cart");
-    }
-  };
+    addToCart(product._id);
+    toast.success("Added to Cart");
+  }
 
   return (
     <div
@@ -81,7 +74,7 @@ function ProductCard({ product, onDelete, onEdit, onView }) {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  addToCart();
+                  handleAddToCart();
                 }}
                 className="flex-1 bg-yellow-500 text-white py-1 rounded"
               >

@@ -1,49 +1,9 @@
 import { useEffect, useState } from "react";
-import API from "../services/api";
+import { useCart } from "../context/cartContext";
 
 function CartModal({ close }) {
-  const [items, setItems] = useState([]);
-  const validItems = items.filter(item => item.product);
   const [showConfirm, setShowConfirm] = useState(false);
-
-  useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const { data } = await API.get("/cart");
-        const cleanItems = (data.items || []).filter(item => item.product);
-        setItems(cleanItems);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchCart();
-  }, []);
-
-  const subtotal = items.reduce(
-    (total, item) => total + item.product.price * item.quantity,
-    0
-);
-
-  const removeItem = async (productId) => {
-    try {
-      const { data } = await API.delete(`/cart/${productId}`);
-      const cleanItems = (data.items || []).filter(item => item.product);
-      setItems(cleanItems);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-const clearCart = async () => {
-  try {
-    await API.delete("/cart");
-    setItems([]);
-    setShowConfirm(false);
-
-  } catch (error) {
-    console.error(error);
-  }
-};
+  const { items, removeItem, clearCart, subtotal } = useCart();
 
   return (
     <div
@@ -67,14 +27,14 @@ const clearCart = async () => {
           </button>
         </div>
 
-        {validItems.length === 0 ? (
+        {items.length === 0 ? (
           <p className="text-gray-500">
             Your cart is empty
           </p>
         ) : (
-          validItems.map((item) => (
+          items.map((item) => (
             <div
-              key={item._id}
+              key={item.product._id}
               className="relative border-b overflow-hidden group"
             >
 

@@ -12,28 +12,30 @@ function CreateProduct() {
   const [category, setCategory] = useState("");
   const [image, setImage] = useState("");
   const [preview, setPreview] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  const uploadImage = async (file) => {
-    const formData = new FormData();
-    formData.append("image", file);
+   const uploadImage = async (file) => {
+    try{
+      const formData = new FormData();
+      formData.append("image", file);
 
-    const { data } = await API.post(
-      "/products/upload",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-
-    setImage(data.image);
+      const { data } = await API.post(
+        "/products/upload",
+        formData,
+      );
+      setImage(data.image);
+      toast.success("Image uploaded");
+    } catch(error) {
+      console.error(error);
+      toast.error("Upload failed");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       await API.post("/products", {
@@ -44,12 +46,13 @@ function CreateProduct() {
         category,
         image,
       });
-
       toast.success("Product created!");
-
       navigate("/products");
     } catch (error) {
+      toast.error("Try again!");
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -107,9 +110,10 @@ function CreateProduct() {
         />
 
         <button 
-            disabled={!name || !price || !stock} 
+            type = "submit"
+            disabled={!name || !price || !stock || !image}
             className="bg-green-500 text-white p-2 rounded">
-          Create Product
+          {loading ? "Creating..." : "Create Product"}
         </button>
 
       </form>

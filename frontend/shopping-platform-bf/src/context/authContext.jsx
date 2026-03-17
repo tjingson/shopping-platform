@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await API.post("/auth/logout");
     } catch (err) {
+      toast.error("Something happened, please try again");
       console.error(err);
     }
     setUser(null);

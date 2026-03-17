@@ -32,6 +32,7 @@ function Login() {
 
     } catch (error) {
       toast.error("Invalid email or password");
+      console.error(error);
     }
   };
 

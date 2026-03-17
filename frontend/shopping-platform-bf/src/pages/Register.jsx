@@ -11,11 +11,11 @@ function Register() {
   //check login state
   useEffect(() => {
 
-  if (!loading && user) {
-    navigate("/products");
-  }
+    if (!loading && user) {
+      navigate("/products");
+    }
 
-}, [user, loading]);
+  }, [user, loading]);
 
   const [form, setForm] = useState({
     name: "",
@@ -34,7 +34,8 @@ function Register() {
       navigate("/products");
 
     } catch (error) {
-      toast.error(error.response?.data?.message || "Register failed");
+      toast.error("Register failed");
+      console.error(error);
     }
   };
 

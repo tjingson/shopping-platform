@@ -14,6 +14,7 @@ export const CartProvider = ({ children }) => {
       const { data } = await API.get("/cart");
       setItems((data.items || []).filter(item => item.product));
     } catch (error) {
+      toast.error("Something happened, please try again");
       console.error(error);
     } finally {
       setLoading(false);

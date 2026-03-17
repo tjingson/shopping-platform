@@ -26,6 +26,7 @@ function Products() {
       setProducts(data);
     } catch (error) {
       console.error(error);
+      toast.error("Failed to get product");
     } finally {
       setLoading(false);
     }

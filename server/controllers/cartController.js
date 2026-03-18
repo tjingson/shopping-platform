@@ -2,7 +2,9 @@ const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 
 const addToCart = async (req, res) => {
-  const { productId } = req.body;
+  if (!productId) {
+    return res.status(400).json({ message: "Product ID required" });
+  }
   const product = await Product.findById(productId);
   if (!product) {
     return res.status(404).json({ message: "Product not found" });

@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import Carousel from "../components/Carousel";
 import { useAuth } from "../context/authContext";
 import { IMAGE_URL } from "../services/api";
+import { formatRupiah } from "../utils/format"
 
 function Products() {
   const { user, login, logout } = useAuth();
@@ -25,8 +26,7 @@ function Products() {
       const { data } = await API.get("/products");
       setProducts(data);
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to get product");
+      handleError(error);
     } finally {
       setLoading(false);
     }
@@ -65,14 +65,11 @@ function Products() {
   const confirmDelete = async () => {
     try {
       await API.delete(`/products/${deleteProduct._id}`);
-
       toast.success("Product deleted");
-
       setDeleteProduct(null);
       fetchProducts();
-
     } catch (error) {
-      toast.error("Failed to delete product");
+      handleError(error);
     }
   };
 
@@ -170,7 +167,7 @@ function Products() {
               {selectedProduct.name}
             </h2>
             <p className="text-green-600 font-semibold mt-2">
-              Rp {Number(selectedProduct.price).toLocaleString("id-ID")}
+              Rp {formatRupiah(selectedProduct.price)}
             </p>
 
             <p className="text-gray-600 mt-2">

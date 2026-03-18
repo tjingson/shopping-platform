@@ -29,8 +29,7 @@ function EditProduct() {
       setImage(product.image);
       setPreview(`${IMAGE_URL}${product.image}`);
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to get product");
+      handleError(error);
     }
   };
 
@@ -73,8 +72,7 @@ function EditProduct() {
 
       navigate("/products");
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to update product");
+      handleError(error);
     }
   };
 

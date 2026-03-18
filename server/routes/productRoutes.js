@@ -8,17 +8,18 @@ const {
   deleteProduct
 } = require("../controllers/productController");
 const upload = require("../middleware/uploadMiddleware");
-
 const { protect } = require("../middleware/authMiddleware");
+const { adminOnly } = require("../middleware/adminMiddleware");
+
 
 router.route("/")
   .get(getProducts)
-  .post(protect, createProduct);
+  .post(protect, adminOnly, createProduct);
 
 router.route("/:id")
   .get(getProductById)
-  .put(protect, updateProduct)
-  .delete(protect, deleteProduct);
+  .put(protect, adminOnly, updateProduct)
+  .delete(protect, adminOnly, deleteProduct);
 
   router.post("/upload", protect, upload.single("image"), (req, res) => {
   res.json({

@@ -19,20 +19,20 @@ function Login() {
     if (user) {
       navigate("/products");
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const { data } = await API.post("/auth/login", form);
+      await API.post("/auth/login", form);
+      const { data } = await API.get("/auth/me");
       login(data);   // update auth context
       toast.success("Login successful!");
       navigate("/products");
 
     } catch (error) {
-      toast.error("Invalid email or password");
-      console.error(error);
+      handleError(error);
     }
   };
 

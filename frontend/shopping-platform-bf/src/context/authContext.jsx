@@ -29,9 +29,8 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await API.post("/auth/logout");
-    } catch (err) {
-      toast.error("Something happened, please try again");
-      console.error(err);
+    } catch (error) {
+      handleError(error);
     }
     setUser(null);
   };

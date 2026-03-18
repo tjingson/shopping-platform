@@ -32,10 +32,8 @@ function Register() {
       login(data); // update AuthContext
       toast.success("Register successful!");
       navigate("/products");
-
     } catch (error) {
-      toast.error("Register failed");
-      console.error(error);
+      handleError(error);
     }
   };
 

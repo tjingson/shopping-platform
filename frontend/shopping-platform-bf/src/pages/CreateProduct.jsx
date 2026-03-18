@@ -27,9 +27,8 @@ function CreateProduct() {
       );
       setImage(data.image);
       toast.success("Image uploaded");
-    } catch(error) {
-      console.error(error);
-      toast.error("Upload failed");
+    } catch (error) {
+      handleError(error);
     }
   };
 
@@ -40,8 +39,8 @@ function CreateProduct() {
     try {
       await API.post("/products", {
         name,
-        price: Number(price),
-        stock: Number(stock),
+        price: toNumber(price),
+        stock: toNumber(stock),
         description,
         category,
         image,
@@ -49,8 +48,7 @@ function CreateProduct() {
       toast.success("Product created!");
       navigate("/products");
     } catch (error) {
-      toast.error("Try again!");
-      console.error(error);
+      handleError(error);
     } finally {
       setLoading(false);
     }

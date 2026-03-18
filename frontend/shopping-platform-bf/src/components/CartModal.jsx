@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useCart } from "../context/cartContext";
+import { formatRupiah } from "../utils/format"
 
 function CartModal({ close }) {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -60,7 +61,7 @@ function CartModal({ close }) {
                 </div>
 
                 <p className="font-medium">
-                  Rp {Number(item.product.price).toLocaleString("id-ID")}
+                  Rp {formatRupiah(item.product.price)}
                 </p>
 
               </div>
@@ -72,7 +73,7 @@ function CartModal({ close }) {
         <div className="mt-6 border-t pt-4 flex justify-between font-semibold text-lg">
           <span>Subtotal</span>
           <span>
-            Rp {subtotal.toLocaleString("id-ID")}
+            Rp {formatRupiah(subtotal)}
           </span>
         </div>
 

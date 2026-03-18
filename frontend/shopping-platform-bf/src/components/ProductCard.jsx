@@ -1,43 +1,43 @@
 import toast from "react-hot-toast";
 import { useAuth } from "../context/authContext";
 import { IMAGE_URL } from "../services/api";
-// import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/cartContext";
+import { useState } from "react";
+import { formatRupiah } from "../utils/format"
+import AuthModal from "./AuthModal"
 
 function ProductCard({ product, onDelete, onEdit, onView }) {
   const { user } = useAuth();
-  // const navigate = useNavigate();
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
     if (!user) {
-      toast.error ("Please Login");
+      setShowAuthModal(true);
       return
     }
     addToCart(product._id);
     toast.success("Added to Cart");
   }
 
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
   return (
     <div
       onClick={() => onView(product)}
       className="bg-white rounded-xl shadow hover:shadow-lg hover:scale-[1.02] transition cursor-pointer overflow-hidden"
     >
-
       <img
         src={`${IMAGE_URL}${product.image}`}
         alt={product.name}
         className="w-full h-48 object-cover"
       />
-
       <div className="p-4 space-y-2">
-
         <h2 className="text-lg font-semibold text-gray-800">
           {product.name}
         </h2>
 
         <p className="text-green-600 font-bold">
-          Rp {Number(product.price).toLocaleString("id-ID")}
+          Rp {formatRupiah(product.price)}
         </p>
 
         <p className="text-sm text-gray-500">
@@ -94,6 +94,12 @@ function ProductCard({ product, onDelete, onEdit, onView }) {
 
         </div>
       </div>
+
+      <AuthModal
+        open={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onLogin={() => navigate("/login")}
+      />
 
     </div>
   );

@@ -4,6 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import ImageUploader from "../components/ImageUploader";
 import { IMAGE_URL } from "../services/api";
+import { updateProduct } from "../services/productService";
+import { handleError } from "../utils/handleError";
 
 function EditProduct() {
   const { id } = useParams();
@@ -59,17 +61,15 @@ function EditProduct() {
     e.preventDefault();
 
     try {
-      await API.put(`/products/${id}`, {
+      await updateProduct(id, {
         name,
         price,
         stock,
         description,
         category,
-        image
+        image,
       });
-
       toast.success("Product updated!");
-
       navigate("/products");
     } catch (error) {
       handleError(error);

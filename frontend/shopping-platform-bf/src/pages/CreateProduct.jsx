@@ -3,6 +3,8 @@ import API from "../services/api";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import ImageUploader from "../components/ImageUploader";
+import { createProduct } from "../services/productService";
+import { handleError } from "../utils/handleError";
 
 function CreateProduct() {
   const [name, setName] = useState("");
@@ -37,10 +39,10 @@ function CreateProduct() {
     setLoading(true);
 
     try {
-      await API.post("/products", {
+      await createProduct({
         name,
-        price: toNumber(price),
-        stock: toNumber(stock),
+        price: Number(price),
+        stock: Number(stock),
         description,
         category,
         image,

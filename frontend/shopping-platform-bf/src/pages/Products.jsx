@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import API from "../services/api";
 import ProductCard from "../components/ProductCard";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -7,24 +6,33 @@ import Carousel from "../components/Carousel";
 import { useAuth } from "../context/authContext";
 import { IMAGE_URL } from "../services/api";
 import { formatRupiah } from "../utils/format"
+import { getProducts, deleteProduct } from "../services/productService";
+import { handleError } from "../utils/handleError";
 
 function Products() {
-  const { user, login, logout } = useAuth();
+  const { user } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [deleteProduct, setDeleteProduct] = useState(null);
-  const filteredProducts = products.filter((product) =>
+  // const [deleteProduct, setDeleteProduct] = useState(null);
+  const [productToDelete, setProductToDelete] = useState(null);
+  const filteredProducts = (products || []).filter((product) =>
     product.name.toLowerCase().includes(search.toLowerCase())
   );
   const [showWelcome, setShowWelcome] = useState(false);
 
   const fetchProducts = async () => {
     try {
-      const { data } = await API.get("/products");
-      setProducts(data);
+      const { data } = await getProducts();
+      setProducts(
+        Array.isArray(data)
+          ? data
+          : Array.isArray(data.products)
+          ? data.products
+          : []
+      );
     } catch (error) {
       handleError(error);
     } finally {
@@ -51,22 +59,23 @@ function Products() {
   };
 
   useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === "Escape") {
-       setSelectedProduct(null);
-      }
+  if (!selectedProduct) return;
+
+  const handleEsc = (e) => {
+    if (e.key === "Escape") {
+      setSelectedProduct(null);
+    }
   };
 
   window.addEventListener("keydown", handleEsc);
-
   return () => window.removeEventListener("keydown", handleEsc);
-}, []);
+}, [selectedProduct]);
 
   const confirmDelete = async () => {
     try {
-      await API.delete(`/products/${deleteProduct._id}`);
+      await deleteProduct(productToDelete._id);
       toast.success("Product deleted");
-      setDeleteProduct(null);
+      setProductToDelete(null);
       fetchProducts();
     } catch (error) {
       handleError(error);
@@ -132,7 +141,7 @@ function Products() {
             <ProductCard
               key={product._id}
               product={product}
-              onDelete={(product) => setDeleteProduct(product)}
+              onDelete={(product) => setProductToDelete(product)}
               onEdit={handleEdit}
               onView={handleView}
             />
@@ -181,10 +190,10 @@ function Products() {
       )}
 
     {/* Conf delete modal */}
-      {deleteProduct && (
+      {productToDelete && (
         <div
           className="fixed inset-0 flex items-center justify-center z-50"
-          onClick={() => setDeleteProduct(null)}
+          onClick={() => setProductToDelete(null)}
         >
 
           <div
@@ -199,14 +208,14 @@ function Products() {
             <p className="text-gray-600 mb-6">
               Are you sure you want to delete{" "}
               <span className="font-semibold">
-                {deleteProduct.name}
+                {productToDelete.name}
               </span>?
             </p>
 
             <div className="flex justify-end gap-3">
 
               <button
-                onClick={() => setDeleteProduct(null)}
+                onClick={() => setProductToDelete(null)}
                 className="px-4 py-2 rounded border"
               >
                 Cancel

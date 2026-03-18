@@ -1,5 +1,35 @@
-function AuthModal({ open, onClose, onLogin }) {
-  if (!open) return null;
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
+
+
+function AuthModal() {
+  const { showAuthModal, closeAuthModal } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") {
+        closeAuthModal();
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [closeAuthModal]);
+
+  if (!showAuthModal) return null;
+
+  // 🔥 navigate to login
+  const handleLogin = () => {
+    closeAuthModal();
+    navigate("/login");
+  };
+
+  const onClose = () => {
+    closeAuthModal();
+  }
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/30">
@@ -11,7 +41,7 @@ function AuthModal({ open, onClose, onLogin }) {
           Please login to continue
         </p>
         <button
-          onClick={onLogin}
+          onClick={handleLogin}
           className="bg-blue-600 text-white px-4 py-2 rounded w-full"
         >
           Go to Login

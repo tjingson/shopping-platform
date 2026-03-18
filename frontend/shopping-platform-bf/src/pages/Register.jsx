@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/authContext";
+import { handleError } from "../utils/handleError";
 
 function Register() {
   const { user, login, loading } = useAuth();

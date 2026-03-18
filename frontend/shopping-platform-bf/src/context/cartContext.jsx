@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import API from "../services/api";
 import { useAuth } from "./authContext";
+import { handleError } from "../utils/handleError";
 
 const CartContext = createContext();
 
@@ -26,7 +27,7 @@ export const CartProvider = ({ children }) => {
     } else {
       setItems([]);
     }
-  }, [user]);
+  }, [user, loading]);
 
   const addToCart = async (productId) => {
     const { data } = await API.post("/cart", { productId });

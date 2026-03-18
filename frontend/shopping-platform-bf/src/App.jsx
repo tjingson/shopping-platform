@@ -9,9 +9,11 @@ import CreateProduct from "./pages/CreateProduct";
 import EditProduct from "./pages/EditProduct";
 import CartButton from "./components/CartButton";
 import { useAuth } from "./context/authContext";
+import AuthModal from "./components/AuthModal";
+
 
 function App() {
-  const { user } = useAuth();
+  const { user,showAuthModal } = useAuth();
   return (
     <Router>
       <Toaster
@@ -57,6 +59,7 @@ function App() {
             />
           </Routes>
         </div>
+        {showAuthModal && <AuthModal />}
         {user && <CartButton />}
       </div>
     </Router>

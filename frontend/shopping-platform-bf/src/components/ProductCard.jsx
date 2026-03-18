@@ -2,24 +2,23 @@ import toast from "react-hot-toast";
 import { useAuth } from "../context/authContext";
 import { IMAGE_URL } from "../services/api";
 import { useCart } from "../context/cartContext";
-import { useState } from "react";
 import { formatRupiah } from "../utils/format"
-import AuthModal from "./AuthModal"
 
 function ProductCard({ product, onDelete, onEdit, onView }) {
-  const { user } = useAuth();
+  const { user, loading, openAuthModal } = useAuth();
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
+    if (loading) return;
     if (!user) {
-      setShowAuthModal(true);
+      console.log("OPEN MODAL");
+      openAuthModal();
       return
     }
     addToCart(product._id);
     toast.success("Added to Cart");
   }
 
-  const [showAuthModal, setShowAuthModal] = useState(false);
 
   return (
     <div
@@ -27,7 +26,10 @@ function ProductCard({ product, onDelete, onEdit, onView }) {
       className="bg-white rounded-xl shadow hover:shadow-lg hover:scale-[1.02] transition cursor-pointer overflow-hidden"
     >
       <img
-        src={`${IMAGE_URL}${product.image}`}
+        src={
+          product.image
+          ? `${IMAGE_URL}${product.image}`
+          :""}
         alt={product.name}
         className="w-full h-48 object-cover"
       />
@@ -94,13 +96,6 @@ function ProductCard({ product, onDelete, onEdit, onView }) {
 
         </div>
       </div>
-
-      <AuthModal
-        open={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        onLogin={() => navigate("/login")}
-      />
-
     </div>
   );
 }

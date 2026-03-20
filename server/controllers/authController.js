@@ -53,6 +53,7 @@ const loginUser = async (req, res) => {
   if (user && (await user.matchPassword(password))) {
     const token = generateToken(user._id);
     setTokenCookie(res, token);
+    console.log("token:", token)
     res.json({
       _id: user._id,
       name: user.name,

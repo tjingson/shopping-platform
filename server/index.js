@@ -17,22 +17,27 @@ connectDB();
 
 app.use(cookieParser());
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (
-        !origin ||
-        origin === "http://localhost:5173" ||
-        origin === "https://shopping-platform-rc25.vercel.app"
-      ) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true
-  })
-);
+// app.use(
+//   cors({
+//     origin: (origin, callback) => {
+//       if (
+//         !origin ||
+//         origin === "http://localhost:5173" ||
+//         origin === "https://shopping-platform-rc25.vercel.app"
+//       ) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true
+//   })
+// );
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -15,6 +15,7 @@ const app = express();
 
 connectDB();
 
+app.set("trust proxy", 1);
 app.use(cookieParser());
 
 // app.use(
@@ -51,8 +52,6 @@ app.use("/uploads", express.static("uploads"));
 app.get("/", (req, res) => {
   res.send("API Working, Josh!");
 });
-
-app.set("trust proxy", 1);
 
 app.use(notFound);
 app.use(errorHandler);

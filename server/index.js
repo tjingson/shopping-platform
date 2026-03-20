@@ -23,8 +23,7 @@ app.use(
       if (
         !origin ||
         origin === "http://localhost:5173" ||
-        origin === "https://shopping-platform-rc25.vercel.app" ||
-        origin.endsWith(".vercel.app")
+        origin === "https://shopping-platform-rc25.vercel.app"
       ) {
         callback(null, true);
       } else {
@@ -47,6 +46,8 @@ app.use("/uploads", express.static("uploads"));
 app.get("/", (req, res) => {
   res.send("API Working, Josh!");
 });
+
+app.set("trust proxy", 1);
 
 app.use(notFound);
 app.use(errorHandler);
